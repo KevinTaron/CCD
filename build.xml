@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- author=Kevin Taron
+ 	  date=01.12.2013 	
+ -->
+
+<project basedir="." default="MainTasks" name="code-kata">
+	 <!-- Erstellt Ordnervariablen-->
+	<property name="sourceOrdner" location="src" />
+	<property name="buildOrdner" location="run" />
+	<property name="docsdOrdner" location="docs" />
+	
+	 <!-- Ordner aufraeumen-->
+	 <target name="clean">
+	    <delete dir="${buildOrdner}" />
+	 	<delete dir="${docsdOrdner}" />
+	 </target>
+	
+	 <!-- Ordner erstellen -->
+	 <target name="createOrdner">
+	    <mkdir dir="${buildOrdner}" />
+	 	<mkdir dir="${docsdOrdner}" />
+	 </target>
+	
+	 <!-- Projekt compilieren -->
+	<target name="compile" depends="clean, createOrdner">
+	    <javac srcdir="${sourceOrdner}" destdir="${buildOrdner}">
+	    </javac>
+
+	</target>
+	
+	 <!-- Dokumentation erstellen -->
+	<target name="docs" depends="compile">
+	    <javadoc packagenames="src" sourcepath="${sourceOrdner}" destdir="${docsdOrdner}">
+	       <fileset dir="${sourceOrdner}">
+	                <include name="**" />
+	           </fileset>
+	    </javadoc>
+	  </target>
+	
+	 <!-- Projekt ausfuehren -->
+	<target name="run" depends="jar">
+	    <java classname="TicTacToe" classpath="${buildOrdner}\tictactoe.jar" fork="true" />
+	</target>
+	
+	 <!-- JAR File erstellen -->
+	 <target name="jar" depends="compile">
+	    <jar destfile="${buildOrdner}\tictactoe.jar" basedir="${buildOrdner}" includes="**/*.class"> 
+	    	  <manifest>
+	    	  	<attribute name="Main-Class" value="taronkevin.TicTacToe" />
+	    	  </manifest>
+	    </jar>
+	</target>
+	
+	 <!-- Alle Aufgaben ausfuehren -->
+	<target name="MainTasks" depends="compile, docs, jar, run">
+	    <description>Behandelt die Hauptaufgaben</description>
+	 </target>
+</project>
